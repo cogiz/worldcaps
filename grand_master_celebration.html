@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grand Master</title>
+
+<style>
+body {
+    margin: 0;
+    /* Base background, overridden by the flash animation */
+    background: black; 
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* IDEA 3: Background Flash & Gold Shift */
+@keyframes bgShift {
+    0% { background: #ffffff; }
+    15% { background: radial-gradient(circle, #5a4b00 0%, #000000 80%); }
+    100% { background: radial-gradient(circle, #151100 0%, #000000 100%); }
+}
+
+body.celebrate {
+    animation: bgShift 4s ease-out forwards;
+}
+
+#title {
+    position: absolute;
+    top: 35%;
+    width: 100%;
+    text-align: center;
+    font-size: 64px;
+    font-weight: bold;
+    opacity: 0;
+    transform: scale(0);
+    /* Badge Slam Physics */
+    transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+    z-index: 10;
+}
+
+#title.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* IDEA 3: Shimmering Gold/Platinum Text */
+.gold-text {
+    background: linear-gradient(to right, #ffd700, #ffffff, #d4af37, #ffd700);
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shine 2.5s linear infinite;
+    text-shadow: 0px 10px 20px rgba(255, 215, 0, 0.3);
+}
+
+@keyframes shine {
+    to { background-position: 200% center; }
+}
+
+#subtitle {
+    position: absolute;
+    top: 48%;
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    opacity: 0;
+    transition: opacity 2s ease;
+    /*text-shadow: 0 0 10px rgba(255,255,255,0.3);*/
+    z-index: 10;
+}
+
+#subtitle.show {
+    opacity: 1;
+}
+
+canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+}
+</style>
+</head>
+
+<body>
+
+<div id="title" class="gold-text">GRAND MASTER UNLOCKED</div>
+<div id="subtitle" class="gold-text">You have mastered all 10 regions</div>
+
+<canvas id="fireworks"></canvas>
+
+<script>
+/* =========================
+   AUDIO SETUP
+   ========================= */
+const victoryAudio = new Audio("victory.mp3");
+const fireworksAudio = new Audio("../../assets/audio/fireworks.mp3");
+
+const REDIRECT_DELAY = 8500; // 8.5 seconds to allow stars to bounce
+
+/* =========================
+   UI & CANVAS
+   ========================= */
+const title = document.getElementById("title");
+const subtitle = document.getElementById("subtitle");
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+
+canvas.width = 1920;
+canvas.height = 1080;
+
+/* =========================
+   PARTICLE ARRAYS
+   ========================= */
+let ribbons = [];
+let stars = [];
+let starsSpawned = 0;
+let starsActive = false;
+const TOTAL_STARS = 246; // Exactly 246 capitals
+
+const COLORS = ["#ffd700", "#ff0000", "#ffffff", "#00ff00", "#c0c0c0"]; // Gold, Red, White, Green, Silver
+
+/* IDEA 2: 3D RIBBON BURST */
+function createFirework() {
+    const x = Math.random() * canvas.width;
+    const y = canvas.height;
+
+    for (let i = 0; i < 70; i++) {
+        ribbons.push({
+            x: x,
+            y: y,
+            vx: (Math.random() - 0.5) * 15,
+            vy: -(Math.random() * 20 + 10),
+            alpha: 1.5, // slightly over 1 to keep them alive longer
+            size: Math.random() * 8 + 6,     // Ribbon width
+            length: Math.random() * 15 + 10, // Ribbon length
+            color: COLORS[Math.floor(Math.random() * COLORS.length)],
+            wobble: Math.random() * Math.PI * 2,
+            wobbleSpeed: Math.random() * 0.1 + 0.05,
+            spin: Math.random() * Math.PI * 2,
+            spinSpeed: Math.random() * 0.3 + 0.1
+        });
+    }
+}
+
+/* =========================
+   ANIMATION LOOP
+   ========================= */
+function startFireworks() {
+    const startTime = performance.now();
+
+    const burstTimes = [
+        0.100 * 1000,
+        0.400 * 1000,
+        0.800 * 1000,
+        1.500 * 1000,
+        2.100 * 1000,
+        2.600 * 1000
+    ];
+
+    let burstIndex = 0;
+
+    function loop(now) {
+        const elapsed = now - startTime;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // --- DRAW 3D RIBBONS ---
+        ribbons.forEach(p => {
+            p.x += p.vx + Math.sin(p.wobble) * 2.5; // Wind flutter
+            p.y += p.vy;
+            p.vy += 0.25; // Light gravity
+            p.alpha -= 0.005;
+            p.wobble += p.wobbleSpeed;
+            p.spin += p.spinSpeed;
+
+            ctx.save();
+            ctx.globalAlpha = Math.max(p.alpha, 0);
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.wobble); // Tilt based on wind
+            ctx.scale(Math.cos(p.spin), 1); // 3D spin effect
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size / 2, -p.length / 2, p.size, p.length);
+            ctx.restore();
+        });
+
+        // Filter out dead ribbons
+        ribbons = ribbons.filter(p => p.alpha > 0);
+
+        // --- TRIGGER STAR FOUNTAIN ---
+        if (starsActive && starsSpawned < TOTAL_STARS) {
+            let toSpawn = Math.min(6, TOTAL_STARS - starsSpawned); // Spawn 6 per frame
+            for (let i = 0; i < toSpawn; i++) {
+                stars.push({
+                    x: canvas.width / 2,
+                    y: canvas.height * 0.40, // Burst from behind the text
+                    vx: (Math.random() - 0.5) * 24,
+                    vy: -(Math.random() * 18 + 5), 
+                    rotation: Math.random() * Math.PI * 2,
+                    rotSpeed: (Math.random() - 0.5) * 0.4,
+                    size: Math.random() * 20 + 20, // Font size 20px - 40px
+                });
+            }
+            starsSpawned += toSpawn;
+        }
+
+        // --- DRAW SOLITAIRE STARS ---
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        
+        stars.forEach(s => {
+            s.x += s.vx;
+            s.y += s.vy;
+            s.vy += 0.6; // Heavy gravity for bouncy feel
+            s.rotation += s.rotSpeed;
+
+            // Floor Collision / Bounce
+            if (s.y > canvas.height - s.size / 2) {
+                s.y = canvas.height - s.size / 2;
+                s.vy *= -0.75; // Lose energy on bounce
+                s.vx *= 0.95;  // Slight friction
+            }
+
+            ctx.save();
+            ctx.translate(s.x, s.y);
+            ctx.rotate(s.rotation);
+            ctx.fillStyle = "#ff0000"; // Signature red star
+            ctx.shadowColor = "rgba(0,0,0,0.8)";
+            ctx.shadowBlur = 4;
+            ctx.font = s.size + "px Arial";
+            ctx.fillText("★", 0, 0);
+            ctx.restore();
+        });
+
+        // --- FIREWORK BURSTS ---
+        if (burstIndex < burstTimes.length && elapsed >= burstTimes[burstIndex]) {
+            createFirework();
+            burstIndex++;
+        }
+
+        requestAnimationFrame(loop);
+    }
+
+    requestAnimationFrame(loop);
+}
+
+/* =========================
+   SEQUENCE
+   ========================= */
+function startSequence() {
+    // 1. Flash background and slam text
+    document.body.classList.add("celebrate");
+    setTimeout(() => title.classList.add("show"), 100);
+    setTimeout(() => subtitle.classList.add("show"), 700);
+
+    // Audio Trigger
+    try {
+        victoryAudio.currentTime = 0;
+        fireworksAudio.currentTime = 0;
+        victoryAudio.volume = 1.0;
+        fireworksAudio.volume = 1.0;
+
+        const p1 = victoryAudio.play();
+        const p2 = fireworksAudio.play();
+
+        if (p1 !== undefined) p1.catch(() => {});
+        if (p2 !== undefined) p2.catch(() => {});
+    } catch (e) {}
+
+    // 2. Start Ribbon Fireworks
+    setTimeout(() => {
+        startFireworks();
+    }, 300);
+
+    // 3. Trigger the 246-Star Solitaire Waterfall
+    setTimeout(() => {
+        starsActive = true;
+    }, 1200);
+
+    // 4. Redirect back to Region Menu (Index.html)
+    setTimeout(() => {
+        window.location.href = "index.html";
+    }, REDIRECT_DELAY);
+}
+
+/* =========================
+   AUTO START
+   ========================= */
+document.addEventListener("DOMContentLoaded", () => {
+    startSequence();
+
+    // Browser audio fallback requirement
+    document.addEventListener("click", () => {
+        victoryAudio.play().catch(() => {});
+        fireworksAudio.play().catch(() => {});
+    }, { once: true });
+});
+</script>
+
+</body>
+</html>

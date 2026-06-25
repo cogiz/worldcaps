@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title></title>
+
+<style>
+body {
+    margin: 0;
+    background: #000;
+    color: #00ff00;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin-top: 40px;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    color: #999;
+    margin-bottom: 30px;
+}
+
+#region-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 300px);
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.region-panel {
+    background: #000;
+    border: 1px solid #333;
+    color: #ccc;
+    padding: 15px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s ease;
+}
+
+.region-panel:hover {
+    border-color: #00ff00;
+}
+
+.region-panel.selected {
+    background: #00ff00;
+    color: #000;
+}
+
+.star {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: red;
+    font-size: 20px;
+    display: none;
+}
+
+.region-panel.completed .star {
+    display: block;
+}
+
+#box-score {
+    width: 620px;
+    border: 1px solid #333;
+    margin-bottom: 20px;
+    cursor: pointer;
+    user-select: none;
+}
+
+#box-score-header {
+    padding: 15px;
+    font-weight: bold;
+    color: #00ff00;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#score-content {
+    padding: 0 15px 15px 15px;
+    display: block;
+}
+
+#box-score.collapsed #score-content {
+    display: none;
+}
+
+/* NEW: Grand Master Text Styling */
+#grand-master-text {
+    display: none; /* Hidden by default */
+    color: #00ff00;
+    font-size: 26px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+    text-align: center;
+}
+
+#region-screen {
+    position: fixed;
+    inset: 0;
+    background: black;
+}
+
+#controlRow {
+  width: 620px;
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.control-btn {
+  flex: 1;
+  padding: 12px;
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #eee;
+  cursor: pointer;
+}
+
+.control-btn:hover {
+  border-color: #00ff00;
+  color: #00ff00;
+}
+</style>
+</head>
+
+<body>
+
+<div id="menu-screen">
+
+<h1>WORLDCAPS</h1>
+<div class="subtitle">Select a region</div>
+
+<div id="region-grid"></div>
+
+<div id="box-score" class="collapsed">
+    <div id="box-score-header">
+        BOX SCORE <span id="box-toggle">▸</span>
+    </div>
+    <div id="score-content"></div>
+</div>
+
+<!-- NEW: Grand Master Text Element -->
+<div id="grand-master-text">GRAND MASTER</div>
+
+<div id="controlRow">
+    <button id="reset-scores" class="control-btn">RESET BOX SCORE</button>
+</div>
+
+</div>
+
+<div id="region-screen" style="display:none;">
+    <iframe id="region-frame"
+        style="width:100vw;height:100vh;border:none;background:black;"></iframe>
+</div>
+
+<script>
+
+const REGIONS = [
+{ name:"Australia", id:"australia", path:"regions/australia_region/index.html", total:8 },
+{ name:"Canada", id:"canada", path:"regions/canada_region/index.html", total:13 },
+{ name:"Caribbean", id:"caribbean", path:"regions/caribbean_region/index.html", total:19 },
+{ name:"Asia", id:"asia", path:"regions/asia_region/index.html", total:28 },
+{ name:"Africa", id:"africa", path:"regions/africa_region/index.html", total:50 },
+{ name:"Central America", id:"central_america", path:"regions/central_america_region/index.html", total:8 },
+{ name:"Europe", id:"europe", path:"regions/europe_region/index.html", total:44 },
+{ name:"Middle East", id:"middle_east", path:"regions/middle_east_region/index.html", total:13 },
+{ name:"South America", id:"south_america", path:"regions/south_america_region/index.html", total:12 },
+{ name:"United States", id:"united_states", path:"regions/united_states_region/index.html", total:51 }
+];
+
+const regionGrid = document.getElementById("region-grid");
+const scoreContent = document.getElementById("score-content");
+const menuScreen = document.getElementById("menu-screen");
+const regionScreen = document.getElementById("region-screen");
+const regionFrame = document.getElementById("region-frame");
+
+const boxScore = document.getElementById("box-score");
+const boxToggle = document.getElementById("box-toggle");
+const gmText = document.getElementById("grand-master-text"); // Reference to new text
+
+// 1. Create ONE audio object, don't create a new one every click
+const clickAudio = new Audio("assets/audio/generic_click.mp3");
+
+function playClickSound() {
+    clickAudio.currentTime = 0; // Rewind to start
+    clickAudio.play().catch(()=>{});
+}
+
+let currentView = "menu";
+let scores = loadScores();
+let grandMasterTriggered = false;
+
+function loadScores() {
+    const stored = localStorage.getItem("worldcaps_scores");
+    if (stored) return JSON.parse(stored);
+
+    const init = {};
+    REGIONS.forEach(r => init[r.id] = { best:0, total:r.total });
+    localStorage.setItem("worldcaps_scores", JSON.stringify(init));
+    return init;
+}
+
+// 2. Add a state lock for transitions
+let isTransitioning = false;
+
+function buildMenu() {
+    regionGrid.innerHTML = "";
+
+    REGIONS.forEach(region => {
+        const panel = document.createElement("div");
+        panel.className = "region-panel";
+
+        if (scores[region.id].best === region.total) {
+            panel.classList.add("completed");
+        }
+
+        panel.innerHTML = `${region.name}<span class="star">★</span>`;
+
+        panel.onclick = () => {
+            // 3. Block spam clicking
+            if (isTransitioning) return; 
+            isTransitioning = true;
+            
+            playClickSound();
+            showRegion(region);
+
+            // Unlock after iframe has time to load
+            setTimeout(() => { isTransitioning = false; }, 1000);
+        };
+
+        regionGrid.appendChild(panel);
+    });
+}
+
+
+function buildBoxScore() {
+    scoreContent.innerHTML = "";
+
+    REGIONS.forEach(region => {
+        const best = scores[region.id].best;
+        const total = region.total;
+        const pct = total ? Math.round(best / total * 100) : 0;
+
+        const isPerfect = pct === 100;
+
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.justifyContent = "space-between";
+        row.style.fontFamily = "monospace";
+        row.style.marginBottom = "12px";
+
+        row.innerHTML = `
+            <span style="color:${isPerfect ? '#00ff00' : '#ffffff'};">
+                ${region.name}
+            </span>
+            <span style="color:${isPerfect ? '#00ff00' : '#ffffff'};">
+                ${pct}%
+            </span>
+        `;
+
+        scoreContent.appendChild(row);
+    });
+}
+
+function showMenu() {
+    currentView = "menu";
+    regionScreen.style.display = "none";
+    menuScreen.style.display = "block";
+    regionFrame.src = "";
+}
+
+function showRegion(region) {
+    currentView = "region";
+    menuScreen.style.display = "none";
+    regionScreen.style.display = "block";
+    regionFrame.src = region.path;
+}
+
+// NEW: Function to toggle the Grand Master text display
+function updateGrandMasterDisplay() {
+    const allPerfect = REGIONS.every(r => scores[r.id].best === r.total);
+    
+    // Only show if they are perfect AND they have already seen the celebration screen
+    if (allPerfect && sessionStorage.getItem("grandMasterTriggered") === "1") {
+        gmText.style.display = "block";
+    } else {
+        gmText.style.display = "none";
+    }
+}
+
+function checkGrandMaster() {
+    const allPerfect = REGIONS.every(r =>
+        scores[r.id].best === r.total
+    );
+
+    if (!allPerfect) return;
+    if (grandMasterTriggered) return;
+    if (sessionStorage.getItem("grandMasterTriggered")==="1") return;
+
+    grandMasterTriggered = true;
+    sessionStorage.setItem("grandMasterTriggered","1");
+
+    setTimeout(() => {
+        window.location.href = "grand_master_celebration.html";
+    }, 600);
+}
+
+window.addEventListener("message", (event) => {
+
+    if (event.origin !== window.location.origin) return;
+    if (!event.data || event.data.type !== "REGION_COMPLETE") return;
+
+    const { regionId, score, total } = event.data;
+
+    if (!scores[regionId]) return;
+
+    scores[regionId].best = Math.max(scores[regionId].best, score);
+    scores[regionId].total = total;
+
+    localStorage.setItem("worldcaps_scores", JSON.stringify(scores));
+
+    buildMenu();
+    buildBoxScore();
+
+    // SHOW MENU FIRST, THEN CHECK
+    setTimeout(() => {
+        showMenu();
+
+        // IMPORTANT FIX: run AFTER view switch
+        checkGrandMaster();
+
+    }, 3000);
+});
+
+boxScore.onclick = () => {
+    playClickSound();
+    boxScore.classList.toggle("collapsed");
+    boxToggle.textContent =
+        boxScore.classList.contains("collapsed") ? "▸" : "▾";
+};
+
+boxScore.onclick = () => {
+    playClickSound();
+    boxScore.classList.toggle("collapsed");
+    boxToggle.textContent =
+        boxScore.classList.contains("collapsed") ? "▸" : "▾";
+};
+
+// --- REPLACED HARDENED RESET BUTTON ---
+document.getElementById("reset-scores").onclick = (e) => {
+    if (e.target.disabled) return;
+    e.target.disabled = true; // Lock button
+
+    playClickSound();
+    localStorage.removeItem("worldcaps_scores");
+    sessionStorage.removeItem("grandMasterTriggered");
+    scores = loadScores();
+    grandMasterTriggered = false;
+    buildMenu();
+    buildBoxScore();
+    updateGrandMasterDisplay();
+
+    // Unlock button after 1 second
+    setTimeout(() => { e.target.disabled = false; }, 1000);
+};
+
+// Initial Load
+buildMenu();
+buildBoxScore();
+updateGrandMasterDisplay(); // NEW: Check if we should show the text on page load
+
+</script>
+
+</body>
+</html>

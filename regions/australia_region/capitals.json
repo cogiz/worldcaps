@@ -1,0 +1,1202 @@
+[
+  {
+    "region": "Africa",
+    "place": "Algeria",
+    "capital": "Algiers"
+  },
+  {
+    "region": "Africa",
+    "place": "Angola",
+    "capital": "Luanda"
+  },
+  {
+    "region": "Africa",
+    "place": "Benin",
+    "capital": "Porto-Novo"
+  },
+  {
+    "region": "Africa",
+    "place": "Botswana",
+    "capital": "Gaborone"
+  },
+  {
+    "region": "Africa",
+    "place": "Burkina",
+    "capital": "Ouagadougou"
+  },
+  {
+    "region": "Africa",
+    "place": "Burundi",
+    "capital": "Gitega"
+  },
+  {
+    "region": "Africa",
+    "place": "Cameroon",
+    "capital": "Yaounde"
+  },
+  {
+    "region": "Africa",
+    "place": "The Central African Republic",
+    "capital": "Bangui"
+  },
+  {
+    "region": "Africa",
+    "place": "Chad",
+    "capital": "Ndjamena"
+  },
+  {
+    "region": "Africa",
+    "place": "The Democratic Republic of Congo",
+    "capital": "Kinshasa"
+  },
+  {
+    "region": "Africa",
+    "place": "Djibouti",
+    "capital": "Djibouti"
+  },
+  {
+    "region": "Africa",
+    "place": "Egypt",
+    "capital": "Cairo"
+  },
+  {
+    "region": "Africa",
+    "place": "Equatorial Guinea",
+    "capital": "Malabo"
+  },
+  {
+    "region": "Africa",
+    "place": "Eritrea",
+    "capital": "Asmara"
+  },
+  {
+    "region": "Africa",
+    "place": "Eswatini (Swaziland)",
+    "capital": "Mbabane"
+  },
+  {
+    "region": "Africa",
+    "place": "Ethiopia",
+    "capital": "Addis Ababa"
+  },
+  {
+    "region": "Africa",
+    "place": "Gabon",
+    "capital": "Libreville"
+  },
+  {
+    "region": "Africa",
+    "place": "Gambia",
+    "capital": "Banjul"
+  },
+  {
+    "region": "Africa",
+    "place": "Ghana",
+    "capital": "Accra"
+  },
+  {
+    "region": "Africa",
+    "place": "Guinea-Bissau",
+    "capital": "Bissau"
+  },
+  {
+    "region": "Africa",
+    "place": "Guinea",
+    "capital": "Conakry"
+  },
+  {
+    "region": "Africa",
+    "place": "The Ivory Coast",
+    "capital": "Abidjan"
+  },
+  {
+    "region": "Africa",
+    "place": "Kenya",
+    "capital": "Nairobi"
+  },
+  {
+    "region": "Africa",
+    "place": "Lesotho",
+    "capital": "Maseru"
+  },
+  {
+    "region": "Africa",
+    "place": "Liberia",
+    "capital": "Monrovia"
+  },
+  {
+    "region": "Africa",
+    "place": "Libya",
+    "capital": "Tripoli"
+  },
+  {
+    "region": "Africa",
+    "place": "Madagascar",
+    "capital": "Antananarivo"
+  },
+  {
+    "region": "Africa",
+    "place": "Malawi",
+    "capital": "Lilongwe"
+  },
+  {
+    "region": "Africa",
+    "place": "Mali",
+    "capital": "Bamako"
+  },
+  {
+    "region": "Africa",
+    "place": "Mauritania",
+    "capital": "Nouakchott"
+  },
+  {
+    "region": "Africa",
+    "place": "Morocco",
+    "capital": "Rabat"
+  },
+  {
+    "region": "Africa",
+    "place": "Mozambique",
+    "capital": "Maputo"
+  },
+  {
+    "region": "Africa",
+    "place": "Namibia",
+    "capital": "Windhoek"
+  },
+  {
+    "region": "Africa",
+    "place": "Nigeria",
+    "capital": "Abuja"
+  },
+  {
+    "region": "Africa",
+    "place": "Niger",
+    "capital": "Niamey"
+  },
+  {
+    "region": "Africa",
+    "place": "Rwanda",
+    "capital": "Kigali"
+  },
+  {
+    "region": "Africa",
+    "place": "Senegal",
+    "capital": "Dakar"
+  },
+  {
+    "region": "Africa",
+    "place": "Sierra Leone",
+    "capital": "Freetown"
+  },
+  {
+    "region": "Africa",
+    "place": "Somalia",
+    "capital": "Mogadishu"
+  },
+  {
+    "region": "Africa",
+    "place": "South Africa",
+    "capital": "Pretoria"
+  },
+  {
+    "region": "Africa",
+    "place": "South Sudan",
+    "capital": "Juba"
+  },
+  {
+    "region": "Africa",
+    "place": "Sudan",
+    "capital": "Khartoum"
+  },
+  {
+    "region": "Africa",
+    "place": "Tanzania",
+    "capital": "Dodoma"
+  },
+  {
+    "region": "Africa",
+    "place": "Togo",
+    "capital": "Lome"
+  },
+  {
+    "region": "Africa",
+    "place": "Tunisia",
+    "capital": "Tunis"
+  },
+  {
+    "region": "Africa",
+    "place": "Uganda",
+    "capital": "Kampala"
+  },
+  {
+    "region": "Africa",
+    "place": "Western Sahara",
+    "capital": "Laayoune"
+  },
+  {
+    "region": "Africa",
+    "place": "Zambia",
+    "capital": "Lusaka"
+  },
+  {
+    "region": "Africa",
+    "place": "Zimbabwe",
+    "capital": "Harare"
+  },
+  {
+    "region": "Europe",
+    "place": "Armenia",
+    "capital": "Yerevan"
+  },
+  {
+    "region": "Asia",
+    "place": "Azerbaijan",
+    "capital": "Baku"
+  },
+  {
+    "region": "Asia",
+    "place": "Bhutan",
+    "capital": "Thimphu"
+  },
+  {
+    "region": "Asia",
+    "place": "Brunei",
+    "capital": "Bandar Seri Begawan"
+  },
+  {
+    "region": "Asia",
+    "place": "Cambodia",
+    "capital": "Phnom Penh"
+  },
+  {
+    "region": "Asia",
+    "place": "China",
+    "capital": "Beijing"
+  },
+  {
+    "region": "Europe",
+    "place": "Georgia",
+    "capital": "Tbilisi"
+  },
+  {
+    "region": "Asia",
+    "place": "India",
+    "capital": "New Delhi"
+  },
+  {
+    "region": "Asia",
+    "place": "Indonesia",
+    "capital": "Jakarta"
+  },
+  {
+    "region": "Asia",
+    "place": "Japan",
+    "capital": "Tokyo"
+  },
+  {
+    "region": "Asia",
+    "place": "Kazakhstan",
+    "capital": "Astana"
+  },
+  {
+    "region": "Asia",
+    "place": "Kyrgystan",
+    "capital": "Bishkek"
+  },
+  {
+    "region": "Asia",
+    "place": "Laos",
+    "capital": "Vientiane"
+  },
+  {
+    "region": "Asia",
+    "place": "Malaysia",
+    "capital": "Kuala Lumpur"
+  },
+  {
+    "region": "Asia",
+    "place": "Mongolia",
+    "capital": "Ulaanbaatar"
+  },
+  {
+    "region": "Asia",
+    "place": "Myanmar",
+    "capital": "Naypyidaw"
+  },
+  {
+    "region": "Asia",
+    "place": "Nepal",
+    "capital": "Kathmandu"
+  },
+  {
+    "region": "Asia",
+    "place": "North Korea",
+    "capital": "Pyongyang"
+  },
+  {
+    "region": "Asia",
+    "place": "Pakistan",
+    "capital": "Islamabad"
+  },
+  {
+    "region": "Asia",
+    "place": "Philippines",
+    "capital": "Manila"
+  },
+  {
+    "region": "Asia",
+    "place": "South Korea",
+    "capital": "Seoul"
+  },
+  {
+    "region": "Asia",
+    "place": "Sri Lanka",
+    "capital": "Colombo"
+  },
+  {
+    "region": "Asia",
+    "place": "Tajikistan",
+    "capital": "Dushanbe"
+  },
+  {
+    "region": "Asia",
+    "place": "Thailand",
+    "capital": "Bangkok"
+  },
+  {
+    "region": "Asia",
+    "place": "Timor-Leste",
+    "capital": "Dili"
+  },
+  {
+    "region": "Europe",
+    "place": "Turkey",
+    "capital": "Ankara"
+  },
+  {
+    "region": "Asia",
+    "place": "Turkmenistan",
+    "capital": "Ashgabat"
+  },
+  {
+    "region": "Asia",
+    "place": "Uzbekistan",
+    "capital": "Tashkent"
+  },
+  {
+    "region": "Asia",
+    "place": "Vietnam",
+    "capital": "Hanoi"
+  },
+  {
+    "region": "Australia",
+    "place": "New South Wales",
+    "capital": "Sydney"
+  },
+  {
+    "region": "Australia",
+    "place": "Queensland",
+    "capital": "Brisbane"
+  },
+  {
+    "region": "Australia",
+    "place": "South Australia",
+    "capital": "Adelaide"
+  },
+  {
+    "region": "Australia",
+    "place": "Tasmania",
+    "capital": "Hobart"
+  },
+  {
+    "region": "Australia",
+    "place": "Northern Territory",
+    "capital": "Darwin"
+  },
+  {
+    "region": "Australia",
+    "place": "Victoria",
+    "capital": "Melbourne"
+  },
+  {
+    "region": "Australia",
+    "place": "Western Australia",
+    "capital": "Perth"
+  },
+  {
+    "region": "Australia",
+    "place": "Australian Capital Territory",
+    "capital": "Canberra"
+  },
+  {
+    "region": "Canada",
+    "place": "Alberta",
+    "capital": "Edmonton"
+  },
+  {
+    "region": "Canada",
+    "place": "British Columbia",
+    "capital": "Victoria"
+  },
+  {
+    "region": "Canada",
+    "place": "Manitoba",
+    "capital": "Winnipeg"
+  },
+  {
+    "region": "Canada",
+    "place": "New Brunswick",
+    "capital": "Fredericton"
+  },
+  {
+    "region": "Canada",
+    "place": "Newfoundland and Labrador",
+    "capital": "St. John's"
+  },
+  {
+    "region": "Canada",
+    "place": "Nova Scotia",
+    "capital": "Halifax"
+  },
+  {
+    "region": "Canada",
+    "place": "Ontario",
+    "capital": "Toronto"
+  },
+  {
+    "region": "Canada",
+    "place": "Prince Edward Island",
+    "capital": "Charlottetown"
+  },
+  {
+    "region": "Canada",
+    "place": "Quebec",
+    "capital": "Quebec City"
+  },
+  {
+    "region": "Canada",
+    "place": "Saskatchewan",
+    "capital": "Regina"
+  },
+  {
+    "region": "Canada",
+    "place": "The Northwest Territories",
+    "capital": "Yellowknife"
+  },
+  {
+    "region": "Canada",
+    "place": "Nunavut",
+    "capital": "Iqaluit"
+  },
+  {
+    "region": "Canada",
+    "place": "The Yukon Territory",
+    "capital": "Whitehorse"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Antigua and Barbuda",
+    "capital": "St. John's"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Aruba",
+    "capital": "Oranjestad"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Barbados",
+    "capital": "Bridgetown"
+  },
+  {
+    "region": "Caribbean",
+    "place": "The British Virgin Islands",
+    "capital": "Road Town"
+  },
+  {
+    "region": "Caribbean",
+    "place": "The Cayman Islands",
+    "capital": "George Town"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Cuba",
+    "capital": "Havana"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Dominica",
+    "capital": "Roseau"
+  },
+  {
+    "region": "Caribbean",
+    "place": "The Dominican Republic",
+    "capital": "Santo Domingo"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Haiti",
+    "capital": "Port-au-Prince"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Jamaica",
+    "capital": "Kingston"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Montserrat",
+    "capital": "Plymouth"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Puerto Rico",
+    "capital": "San Juan"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Saint Kitts and Nevis",
+    "capital": "Basseterre"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Saint Lucia",
+    "capital": "Castries"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Saint Vincent",
+    "capital": "Kingstown"
+  },
+  {
+    "region": "Caribbean",
+    "place": "Trinidad and Tobago",
+    "capital": "Port of Spain"
+  },
+  {
+    "region": "Caribbean",
+    "place": "The US Virgin Islands",
+    "capital": "Charlotte Amalie"
+  },
+  {
+    "region": "Central_America",
+    "place": "Belize",
+    "capital": "Belmopan"
+  },
+  {
+    "region": "Central America",
+    "place": "Costa Rica",
+    "capital": "San Jose"
+  },
+  {
+    "region": "Central America",
+    "place": "El Salvador",
+    "capital": "San Salvador"
+  },
+  {
+    "region": "Central America",
+    "place": "Guatemala",
+    "capital": "Guatemala City"
+  },
+  {
+    "region": "Central America",
+    "place": "Honduras",
+    "capital": "Tegucigalpa"
+  },
+  {
+    "region": "Central America",
+    "place": "Mexico",
+    "capital": "Mexico City"
+  },
+  {
+    "region": "Central America",
+    "place": "Nicaragua",
+    "capital": "Managua"
+  },
+  {
+    "region": "Central America",
+    "place": "Panama",
+    "capital": "Panama City"
+  },
+  {
+    "region": "Europe",
+    "place": "Albania",
+    "capital": "Tirana"
+  },
+  {
+    "region": "Europe",
+    "place": "Andorra",
+    "capital": "Andorra La Vella"
+  },
+  {
+    "region": "Europe",
+    "place": "Austria",
+    "capital": "Vienna"
+  },
+  {
+    "region": "Europe",
+    "place": "Belarus",
+    "capital": "Minsk"
+  },
+  {
+    "region": "Europe",
+    "place": "Belgium",
+    "capital": "Brussels"
+  },
+  {
+    "region": "Europe",
+    "place": "Bosnia and Herzegovina",
+    "capital": "Sarajevo"
+  },
+  {
+    "region": "Europe",
+    "place": "Bulgaria",
+    "capital": "Sofia"
+  },
+  {
+    "region": "Europe",
+    "place": "Croatia",
+    "capital": "Zagreb"
+  },
+  {
+    "region": "Europe",
+    "place": "The Czech Republic",
+    "capital": "Prague"
+  },
+  {
+    "region": "Europe",
+    "place": "Denmark",
+    "capital": "Copenhagen"
+  },
+  {
+    "region": "Europe",
+    "place": "Estonia",
+    "capital": "Tallinn"
+  },
+  {
+    "region": "Europe",
+    "place": "Finland",
+    "capital": "Helsinki"
+  },
+  {
+    "region": "Europe",
+    "place": "France",
+    "capital": "Paris"
+  },
+  {
+    "region": "Europe",
+    "place": "Germany",
+    "capital": "Berlin"
+  },
+  {
+    "region": "Europe",
+    "place": "Greece",
+    "capital": "Athens"
+  },
+  {
+    "region": "Europe",
+    "place": "Hungary",
+    "capital": "Budapest"
+  },
+  {
+    "region": "Europe",
+    "place": "Iceland",
+    "capital": "Reykjavik"
+  },
+  {
+    "region": "Europe",
+    "place": "Ireland",
+    "capital": "Dublin"
+  },
+  {
+    "region": "Europe",
+    "place": "Italy",
+    "capital": "Rome"
+  },
+  {
+    "region": "Europe",
+    "place": "Latvia",
+    "capital": "Riga"
+  },
+  {
+    "region": "Europe",
+    "place": "Liechtenstein",
+    "capital": "Vaduz"
+  },
+  {
+    "region": "Europe",
+    "place": "Lithuania",
+    "capital": "Vilnius"
+  },
+  {
+    "region": "Europe",
+    "place": "Luxembourg",
+    "capital": "Luxembourg"
+  },
+  {
+    "region": "Europe",
+    "place": "Moldova",
+    "capital": "Chisinau"
+  },
+  {
+    "region": "Europe",
+    "place": "Montenegro",
+    "capital": "Podgorica"
+  },
+  {
+    "region": "Europe",
+    "place": "The Netherlands",
+    "capital": "Amsterdam"
+  },
+  {
+    "region": "Europe",
+    "place": "Macedonia",
+    "capital": "Skopje"
+  },
+  {
+    "region": "Europe",
+    "place": "Norway",
+    "capital": "Oslo"
+  },
+  {
+    "region": "Europe",
+    "place": "Poland",
+    "capital": "Warsaw"
+  },
+  {
+    "region": "Europe",
+    "place": "Portugal",
+    "capital": "Lisbon"
+  },
+  {
+    "region": "Europe",
+    "place": "Romania",
+    "capital": "Bucharest"
+  },
+  {
+    "region": "Asia",
+    "place": "Russia",
+    "capital": "Moscow"
+  },
+  {
+    "region": "Europe",
+    "place": "Serbia",
+    "capital": "Belgrade"
+  },
+  {
+    "region": "Europe",
+    "place": "Slovakia",
+    "capital": "Bratislava"
+  },
+  {
+    "region": "Europe",
+    "place": "Slovenia",
+    "capital": "Ljubljana"
+  },
+  {
+    "region": "Europe",
+    "place": "Spain",
+    "capital": "Madrid"
+  },
+  {
+    "region": "Europe",
+    "place": "Sweden",
+    "capital": "Stockholm"
+  },
+  {
+    "region": "Europe",
+    "place": "Switzerland",
+    "capital": "Bern"
+  },
+  {
+    "region": "Europe",
+    "place": "The United Kingdom",
+    "capital": "London"
+  },
+  {
+    "region": "Europe",
+    "place": "The Ukraine",
+    "capital": "Kyiv"
+  },
+  {
+    "region": "Middle East",
+    "place": "Afghanistan",
+    "capital": "Kabul"
+  },
+  {
+    "region": "Europe",
+    "place": "Cyprus",
+    "capital": "Nicosia"
+  },
+  {
+    "region": "Middle East",
+    "place": "Iran",
+    "capital": "Tehran"
+  },
+  {
+    "region": "Middle East",
+    "place": "Iraq",
+    "capital": "Baghdad"
+  },
+  {
+    "region": "Middle East",
+    "place": "Israel",
+    "capital": "Jerusalem"
+  },
+  {
+    "region": "Middle East",
+    "place": "Jordan",
+    "capital": "Amman"
+  },
+  {
+    "region": "Middle East",
+    "place": "Kuwait",
+    "capital": "Kuwait City"
+  },
+  {
+    "region": "Middle East",
+    "place": "Lebanon",
+    "capital": "Beirut"
+  },
+  {
+    "region": "Middle East",
+    "place": "Oman",
+    "capital": "Muscat"
+  },
+  {
+    "region": "Middle East",
+    "place": "Qatar",
+    "capital": "Doha"
+  },
+  {
+    "region": "Middle East",
+    "place": "Saudi Arabia",
+    "capital": "Riyadh"
+  },
+  {
+    "region": "Middle East",
+    "place": "Syria",
+    "capital": "Damascus"
+  },
+  {
+    "region": "Middle East",
+    "place": "United Arab Emirates",
+    "capital": "Abu Dhabi"
+  },
+  {
+    "region": "Middle East",
+    "place": "Yemen",
+    "capital": "Sana'a"
+  },
+  {
+    "region": "South America",
+    "place": "Argentina",
+    "capital": "Buenos Aires"
+  },
+  {
+    "region": "South America",
+    "place": "Bolivia",
+    "capital": "La Paz"
+  },
+  {
+    "region": "South America",
+    "place": "Brazil",
+    "capital": "Brasilia"
+  },
+  {
+    "region": "South America",
+    "place": "Chile",
+    "capital": "Santiago"
+  },
+  {
+    "region": "South America",
+    "place": "Columbia",
+    "capital": "Bogota"
+  },
+  {
+    "region": "South America",
+    "place": "Ecuador",
+    "capital": "Quito"
+  },
+  {
+    "region": "South America",
+    "place": "Guyana",
+    "capital": "Georgetown"
+  },
+  {
+    "region": "South America",
+    "place": "Paraguay",
+    "capital": "Asuncion"
+  },
+  {
+    "region": "South America",
+    "place": "Peru",
+    "capital": "Lima"
+  },
+  {
+    "region": "South America",
+    "place": "Suriname",
+    "capital": "Paramaribo"
+  },
+  {
+    "region": "South America",
+    "place": "Uruguay",
+    "capital": "Montevideo"
+  },
+  {
+    "region": "South America",
+    "place": "Venezuela",
+    "capital": "Caracas"
+  },
+  {
+    "region": "USA",
+    "place": "Alabama",
+    "capital": "Montgomery"
+  },
+  {
+    "region": "USA",
+    "place": "Alaska",
+    "capital": "Juneau"
+  },
+  {
+    "region": "USA",
+    "place": "Arizona",
+    "capital": "Phoenix"
+  },
+  {
+    "region": "USA",
+    "place": "Arkansas",
+    "capital": "Little Rock"
+  },
+  {
+    "region": "USA",
+    "place": "California",
+    "capital": "Sacramento"
+  },
+  {
+    "region": "USA",
+    "place": "Colorado",
+    "capital": "Denver"
+  },
+  {
+    "region": "USA",
+    "place": "Connecticut",
+    "capital": "Hartford"
+  },
+  {
+    "region": "USA",
+    "place": "Delaware",
+    "capital": "Dover"
+  },
+  {
+    "region": "USA",
+    "place": "Florida",
+    "capital": "Tallahassee"
+  },
+  {
+    "region": "USA",
+    "place": "Georgia",
+    "capital": "Atlanta"
+  },
+  {
+    "region": "USA",
+    "place": "Hawaii",
+    "capital": "Honolulu"
+  },
+  {
+    "region": "USA",
+    "place": "Idaho",
+    "capital": "Boise"
+  },
+  {
+    "region": "USA",
+    "place": "Illinois",
+    "capital": "Springfield"
+  },
+  {
+    "region": "USA",
+    "place": "Indiana",
+    "capital": "Indianapolis"
+  },
+  {
+    "region": "USA",
+    "place": "Iowa",
+    "capital": "Des Moines"
+  },
+  {
+    "region": "USA",
+    "place": "Kansas",
+    "capital": "Topeka"
+  },
+  {
+    "region": "USA",
+    "place": "Kentucky",
+    "capital": "Frankfort"
+  },
+  {
+    "region": "USA",
+    "place": "Louisiana",
+    "capital": "Baton Rouge"
+  },
+  {
+    "region": "USA",
+    "place": "Maine",
+    "capital": "Augusta"
+  },
+  {
+    "region": "USA",
+    "place": "Maryland",
+    "capital": "Annapolis"
+  },
+  {
+    "region": "USA",
+    "place": "Massachusetts",
+    "capital": "Boston"
+  },
+  {
+    "region": "USA",
+    "place": "Michigan",
+    "capital": "Lansing"
+  },
+  {
+    "region": "USA",
+    "place": "Minnesota",
+    "capital": "St. Paul"
+  },
+  {
+    "region": "USA",
+    "place": "Mississippi",
+    "capital": "Jackson"
+  },
+  {
+    "region": "USA",
+    "place": "Missouri",
+    "capital": "Jefferson City"
+  },
+  {
+    "region": "USA",
+    "place": "Montana",
+    "capital": "Helena"
+  },
+  {
+    "region": "USA",
+    "place": "Nebraska",
+    "capital": "Lincoln"
+  },
+  {
+    "region": "USA",
+    "place": "Nevada",
+    "capital": "Carson City"
+  },
+  {
+    "region": "USA",
+    "place": "New Hampshire",
+    "capital": "Concord"
+  },
+  {
+    "region": "USA",
+    "place": "New Jersey",
+    "capital": "Trenton"
+  },
+  {
+    "region": "USA",
+    "place": "New Mexico",
+    "capital": "Santa Fe"
+  },
+  {
+    "region": "USA",
+    "place": "New York",
+    "capital": "Albany"
+  },
+  {
+    "region": "USA",
+    "place": "North Carolina",
+    "capital": "Raleigh"
+  },
+  {
+    "region": "USA",
+    "place": "North Dakota",
+    "capital": "Bismarck"
+  },
+  {
+    "region": "USA",
+    "place": "Ohio",
+    "capital": "Columbus"
+  },
+  {
+    "region": "USA",
+    "place": "Oklahoma",
+    "capital": "Oklahoma City"
+  },
+  {
+    "region": "USA",
+    "place": "Oregon",
+    "capital": "Salem"
+  },
+  {
+    "region": "USA",
+    "place": "Pennsylvania",
+    "capital": "Harrisburg"
+  },
+  {
+    "region": "USA",
+    "place": "Rhode Island",
+    "capital": "Providence"
+  },
+  {
+    "region": "USA",
+    "place": "South Carolina",
+    "capital": "Columbia"
+  },
+  {
+    "region": "USA",
+    "place": "South Dakota",
+    "capital": "Pierre"
+  },
+  {
+    "region": "USA",
+    "place": "Tennessee",
+    "capital": "Nashville"
+  },
+  {
+    "region": "USA",
+    "place": "Texas",
+    "capital": "Austin"
+  },
+  {
+    "region": "USA",
+    "place": "Utah",
+    "capital": "Salt Lake City"
+  },
+  {
+    "region": "USA",
+    "place": "Vermont",
+    "capital": "Montpelier"
+  },
+  {
+    "region": "USA",
+    "place": "Virginia",
+    "capital": "Richmond"
+  },
+  {
+    "region": "USA",
+    "place": "Washington",
+    "capital": "Olympia"
+  },
+  {
+    "region": "USA",
+    "place": "West Virginia",
+    "capital": "Charleston"
+  },
+  {
+    "region": "USA",
+    "place": "Wisconsin",
+    "capital": "Madison"
+  },
+  {
+    "region": "USA",
+    "place": "Wyoming",
+    "capital": "Cheyenne"
+  }
+]

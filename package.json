@@ -1,0 +1,18 @@
+{
+  "name": "worldcaps",
+  "version": "1.0.0",
+  "description": "WorldCaps Geography Quiz Game",
+  "main": "main.js",
+  "scripts": {
+    "dist": "electron-builder --linux AppImage"
+  },
+  "author": "J and S Productions",
+  "license": "ISC",
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1"
+  },
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^24.13.3"
+  }
+}

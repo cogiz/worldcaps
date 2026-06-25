@@ -1,0 +1,148 @@
+/* =========================
+   MOBILE HARDENING
+   ========================= */
+body, html {
+    /* Prevents text highlighting on rapid clicks */
+    -webkit-user-select: none; 
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    /* Prevents double-tap-to-zoom and pinch-to-zoom */
+    touch-action: manipulation; 
+
+    /* Removes the ugly blue flash when tapping buttons on Android */
+    -webkit-tap-highlight-color: transparent; 
+}
+
+/* Prevent images/SVGs from being dragged or saved on long-press */
+img, svg {
+    pointer-events: none; 
+}
+/* Re-enable pointer events ONLY for the paths we need to click */
+svg path {
+    pointer-events: auto;
+
+}/* Make width math predictable everywhere */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #111;
+  color: #eee;
+}
+
+#mapWrap svg path.region-active {
+  fill: #00ff00;
+}
+
+/* =========================
+   HEADER (TITLE + SCORE)
+   ========================= */
+
+#qaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+#qaTitle {
+  font-size: 1.9rem;
+  font-weight: 600; /* reduced from 700 so it fits */
+  text-align: left;
+}
+
+#qaScore {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* =========================
+   QUESTION BOX
+   ========================= */
+
+#questionBox {
+  padding: 16px;
+  margin-bottom: 12px;
+  background: #1a1a1a;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+/* =========================
+   ANSWERS
+   ========================= */
+
+.answerBtn {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 6px;
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 6px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* =========================
+   CONTROL ROW (HINT + NEXT)
+   ========================= */
+
+#controlRow {
+  width: 100%;
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.control-btn {
+  flex: 1;
+  padding: 12px;
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #eee;
+  cursor: pointer;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* =========================
+   ANSWER FEEDBACK STATES
+   ========================= */
+
+.answerBtn.correct {
+  background-color: #00ff00 !important;
+  color: #000;
+  font-weight: 600;
+}
+
+.answerBtn.wrong {
+  background-color: #ff0000 !important;
+  color: #000;
+  font-weight: 600;
+}
+
+.answerBtn.disabled {
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+/* Hint-disabled visual */
+.answerBtn.hint-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}

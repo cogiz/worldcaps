@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WorldCaps – Africa</title>
+
+  <link rel="stylesheet" href="../../shared/css/shared.css">
+  <link rel="stylesheet" href="./css/map.css">
+  <link rel="icon" href="data:,">
+</head>
+
+<body>
+
+  <div id="gameLayout">
+
+    <!-- MAP -->
+    <div id="mapWrap">
+      <div id="capitalMarker"></div>
+    </div>
+
+    <!-- Q&A PANEL -->
+    <div id="qaPanel" style="visibility:hidden;">
+
+      <!-- REGION HEADER (TITLE + LIVE SCORE) -->
+      <div id="qaHeader">
+        <div id="qaTitle">Africa</div>
+        <div id="qaScore">0 / 50</div>
+      </div>
+
+      <!-- QUESTION -->
+      <div id="questionBox"></div>
+
+      <!-- ANSWERS -->
+      <div class="answerBtn"></div>
+      <div class="answerBtn"></div>
+      <div class="answerBtn"></div>
+      <div class="answerBtn"></div>
+
+      <!-- CONTROLS -->
+      <div id="controlRow">
+        <button id="hintBtn" class="control-btn">Hint</button>
+        <button id="nextBtn" class="control-btn">Next</button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="../../shared/js/region_success.js"></script>
+  <script type="module" src="./js/map.js"></script>
+
+</body>
+</html>
+

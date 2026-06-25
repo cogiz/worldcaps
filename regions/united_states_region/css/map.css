@@ -1,0 +1,62 @@
+/* =========================
+   GAME LAYOUT
+   ========================= */
+
+#gameLayout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 80px;
+  margin-top: 30px;
+}
+
+/* =========================
+   MAP STYLING
+   ========================= */
+
+#mapWrap {
+  position: relative;
+  max-width: 1000px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#mapWrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+#mapWrap svg path {
+  fill: #6f6f6f;
+  stroke: #222;
+  stroke-width: 0.8;
+}
+
+#mapWrap svg path.region-active {
+  fill: #00ff00;
+}
+
+/* =========================
+   QA PANEL
+   ========================= */
+
+#qaPanel {
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+}
+
+
+
+
+
+
+
+
+
+
