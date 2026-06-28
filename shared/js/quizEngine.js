@@ -243,8 +243,10 @@ export class QuizEngine {
 
       this.currentEntity = this.entities[this.currentIndex];
 
+      // 1. Inside loadQuestion(), update the formatQuestion call to pass the difficulty:
       if (this.config.formatQuestion) {
-        this.questionBox.textContent = this.config.formatQuestion(this.currentEntity);
+        // CHANGED: Now passing this.config.difficulty as the second argument
+        this.questionBox.textContent = this.config.formatQuestion(this.currentEntity, this.config.difficulty);
       } else {
         this.questionBox.textContent = `What is the Capital of ${this.currentEntity.name}?`;
       }
@@ -255,14 +257,14 @@ export class QuizEngine {
       // Ensure a default difficulty exists
       this.config.difficulty = this.config.difficulty || "advanced";
 
-      // Premium UI updates based on mode choice
+      // 2. Further down in loadQuestion(), update the Hint locking logic:
       if (this.hintBtn) {
-        if (this.config.difficulty === "genius") {
+        // CHANGED: Lock hints for BOTH genius and advanced
+        if (this.config.difficulty === "genius" || this.config.difficulty === "advanced") {
           this.hintBtn.disabled = true;
           this.hintBtn.textContent = "HINTS LOCKED";
           this.hintBtn.style.cursor = "not-allowed";
         } else {
-          // Restore native themes for Beginner and Advanced modes
           this.hintBtn.disabled = false;
           this.hintBtn.textContent = this.originalHintText;
           this.hintBtn.style.cursor = "";
@@ -326,7 +328,7 @@ export class QuizEngine {
 
     btn.blur(); 
 
-    const isCorrect = ans.text === this.currentEntity.capital;
+    const isCorrect = ans.kind === "correct";
 
     if (isCorrect) {
       this.safePlay(this.audioCorrect);
@@ -349,6 +351,14 @@ export class QuizEngine {
           correctBtn.style.color = "#000";
           correctBtn.innerHTML = `<span>${correctBtn.textContent}</span><span style="float:right;font-weight:900;">✔</span>`;
         }
+      }
+
+      // NEW: Sudden Death Check for Genius Mode
+      if (this.config.difficulty === "genius") {
+        setTimeout(() => {
+          this.regionFailed();
+        }, 1000); // Give them 1 second to see the red button before failing
+        return; // Stop further processing so they can't click 'Next'
       }
     }
 
@@ -409,7 +419,7 @@ export class QuizEngine {
     this.isFinished = true;
 
     if (this.diffContainer) {
-      this.diffContainer.style.display = "none";
+      this.diffContainer.style.visibility = "hidden"; // CHANGED from display = "none"
     }
 
     const isPerfect = this.score === this.totalQuestions;
@@ -422,9 +432,10 @@ export class QuizEngine {
     this.questionBox.style.backgroundColor = "#00FF00";
     this.questionBox.style.color = "#000";
 
-    this.answerBtns.forEach(btn => btn.style.display = "none");
-    if (this.hintBtn) this.hintBtn.style.display = "none";
-    if (this.nextBtn) this.nextBtn.style.display = "none";
+    // CHANGED from display = "none" to visibility = "hidden"
+    this.answerBtns.forEach(btn => btn.style.visibility = "hidden");
+    if (this.hintBtn) this.hintBtn.style.visibility = "hidden";
+    if (this.nextBtn) this.nextBtn.style.visibility = "hidden";
 
     this.clearMapStyles();
     if (this.capitalStar) {
@@ -450,6 +461,46 @@ export class QuizEngine {
       if (typeof window.launchPerfectGeographyVictory === "function") {
         window.launchPerfectGeographyVictory();
       }
+    }
+  }
+
+  // 4. Add this entirely NEW method anywhere inside the QuizEngine class (e.g., right below regionComplete):
+  regionFailed() {
+    if (this.isFinished) return;
+    this.isFinished = true;
+
+    if (this.diffContainer) {
+      this.diffContainer.style.visibility = "hidden"; // CHANGED from display = "none"
+    }
+
+    // Show the failure message
+    this.questionBox.textContent = "Genius Level failure, Sorry!";
+    this.questionBox.style.backgroundColor = "#FF0000";
+    this.questionBox.style.color = "#000";
+
+    // CHANGED from display = "none" to visibility = "hidden"
+    this.answerBtns.forEach(btn => btn.style.visibility = "hidden");
+    if (this.hintBtn) this.hintBtn.style.visibility = "hidden";
+    if (this.nextBtn) this.nextBtn.style.visibility = "hidden";
+
+    this.clearMapStyles();
+    if (this.capitalStar) {
+      this.capitalStar.remove();
+      this.capitalStar = null;
+    }
+
+    // Send the current score back to the parent window
+    try {
+      window.parent.postMessage({
+        type: "REGION_COMPLETE",
+        regionId: this.config.regionId,
+        score: this.score, // Saves however many they got right before dying
+        total: this.totalQuestions,
+        percentage: Math.round((this.score / this.totalQuestions) * 100),
+        perfect: false
+      }, "*");
+    } catch (err) {
+      console.warn("postMessage failed:", err);
     }
   }
 

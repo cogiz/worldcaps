@@ -40,17 +40,16 @@ const config = {
     svgRoot.style.marginTop = "0px";
   },
   
-  formatQuestion: (province) => {
-    return `What is the capital of ${province.name}?`;
+   formatQuestion: (entity, difficulty) => {
+    if (difficulty === "genius") {
+      return "What is the name of the highlighted province?"; 
+    } else if (difficulty === "advanced") {
+      return "What is the capital of the highlighted province?";
+    }
+    return `What is the capital of ${entity.name}?`;
   },
   
-  buildAnswers: (province, globalCapitals, difficulty, entities) => {
-    const correctCapital = String(province.capital).trim();
-    const provinceDecoys = CANADA_PROVINCE_DECOYS[province.id] || [];
-    
-    let wrongAnswers = [];
-    const used = new Set([correctCapital]);
-
+  buildAnswers: (entity, globalCapitals, difficulty, entities) => {
     const localShuffle = (arr) => {
       const a = [...arr];
       for (let i = a.length - 1; i > 0; i--) {
@@ -60,25 +59,57 @@ const config = {
       return a;
     };
 
+    // ==========================================
+    // NEW GENIUS MODE: GUESS THE COUNTRY/STATE
+    // ==========================================
+    if (difficulty === "genius") {
+      const correctName = String(entity.name).trim();
+      let wrongAnswers = [];
+      
+      // 1. Get all OTHER names in this specific region
+      const otherNames = localShuffle(
+        entities.map(e => e.name).filter(name => name !== correctName)
+      );
+
+      // 2. Pick the first 3 to use as decoys
+      for (let i = 0; i < 3; i++) {
+        if (otherNames[i]) {
+          wrongAnswers.push({ text: otherNames[i], kind: "wrong" });
+        }
+      }
+
+      // 3. Return the choices
+      const choices = [{ text: correctName, kind: "correct" }, ...wrongAnswers];
+      return localShuffle(choices);
+    }
+
+    // ==========================================
+    // BEGINNER & ADVANCED: GUESS THE CAPITAL
+    // ==========================================
+    const correctCapital = String(entity.capital).trim();
+    const countryDecoys = CANADA_PROVINCE_DECOYS[entity.id] || []; // <-- Remember to change this variable per region!
+    let wrongAnswers = [];
+    const used = new Set([correctCapital]);
     const shuffledGlobal = localShuffle(globalCapitals);
 
     if (difficulty === "beginner") {
-      // BEGINNER: 0 province decoys + 3 global capitals
+      // BEGINNER: 3 global capitals
       for (const city of shuffledGlobal) {
         if (wrongAnswers.length < 3 && !used.has(city)) {
           wrongAnswers.push({ text: city, kind: "wrong" });
           used.add(city);
         }
       }
-    } else if (difficulty === "genius") {
-      // GENIUS: 3 province decoys + 0 global capitals
-      const slicedDecoys = provinceDecoys.slice(0, 3);
+    } else {
+      // ADVANCED: 3 local decoys from the decoy_cities.js file
+      const slicedDecoys = countryDecoys.slice(0, 3);
       slicedDecoys.forEach(city => {
         wrongAnswers.push({ text: city, kind: "wrong" });
         used.add(city);
       });
 
-      // Safety Fallback: If decoy files run short, pad with adjacent Canadian capitals
+      // Safety Fallback: If a country has fewer than 3 decoys in the file, 
+      // pad the remaining slots with other correct capitals from this same region.
       if (wrongAnswers.length < 3) {
         const otherCapitals = localShuffle(entities.map(e => e.capital).filter(c => c !== correctCapital));
         for (const city of otherCapitals) {
@@ -86,25 +117,6 @@ const config = {
             wrongAnswers.push({ text: city, kind: "wrong" });
             used.add(city);
           }
-        }
-      }
-    } else {
-      // ADVANCED: Exactly 1 province decoy + 2 global capitals
-      if (provinceDecoys.length > 0) {
-        wrongAnswers.push({ text: provinceDecoys[0], kind: "preferredWrong" });
-        used.add(provinceDecoys[0]);
-      } else {
-        const otherCapitals = localShuffle(entities.map(e => e.capital).filter(c => c !== correctCapital));
-        if (otherCapitals.length > 0) {
-          wrongAnswers.push({ text: otherCapitals[0], kind: "preferredWrong" });
-          used.add(otherCapitals[0]);
-        }
-      }
-
-      for (const city of shuffledGlobal) {
-        if (wrongAnswers.length < 3 && !used.has(city)) {
-          wrongAnswers.push({ text: city, kind: "wrong" });
-          used.add(city);
         }
       }
     }

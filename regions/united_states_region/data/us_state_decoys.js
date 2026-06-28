@@ -49,6 +49,7 @@ export const US_STATE_DECOYS = {
   MD: ["Baltimore", "Columbia", "Germantown"],
   NJ: ["Newark", "Jersey City", "Paterson"],
   ME: ["Portland", "Bangor", "Lewiston"],
+  DC: ["Brasilia", "New Delhi", "Canberra"],
 };
 
 
