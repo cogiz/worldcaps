@@ -15,10 +15,9 @@ const config = {
   
   formatQuestion: (entity, difficulty) => {
     if (difficulty === "genius") {
-      return "What is the name of the highlighted country?"; 
-    } else if (difficulty === "advanced") {
-      return "What is the capital of the highlighted country?";
+      return "What is the name of this highlighted country?"; 
     }
+    // GENERAL MODE: Always show the name
     return `What is the capital of ${entity.name}?`;
   },
   
@@ -33,63 +32,48 @@ const config = {
     };
 
     // ==========================================
-    // NEW GENIUS MODE: GUESS THE COUNTRY/STATE
+    // GENIUS MODE: GUESS THE COUNTRY/STATE
     // ==========================================
     if (difficulty === "genius") {
       const correctName = String(entity.name).trim();
       let wrongAnswers = [];
       
-      // 1. Get all OTHER names in this specific region
       const otherNames = localShuffle(
         entities.map(e => e.name).filter(name => name !== correctName)
       );
 
-      // 2. Pick the first 3 to use as decoys
       for (let i = 0; i < 3; i++) {
         if (otherNames[i]) {
           wrongAnswers.push({ text: otherNames[i], kind: "wrong" });
         }
       }
 
-      // 3. Return the choices
       const choices = [{ text: correctName, kind: "correct" }, ...wrongAnswers];
       return localShuffle(choices);
     }
 
     // ==========================================
-    // BEGINNER & ADVANCED: GUESS THE CAPITAL
+    // GENERAL MODE: GUESS THE CAPITAL (3 Local Decoys)
     // ==========================================
     const correctCapital = String(entity.capital).trim();
-    const countryDecoys = LATIN_AMERICA_DECOY_CITIES[entity.id] || []; // <-- Remember to change this variable per region!
+    const countryDecoys = LATIN_AMERICA_DECOY_CITIES[entity.id] || []; // <-- CHANGE THIS VARIABLE PER REGION!
     let wrongAnswers = [];
     const used = new Set([correctCapital]);
-    const shuffledGlobal = localShuffle(globalCapitals);
 
-    if (difficulty === "beginner") {
-      // BEGINNER: 3 global capitals
-      for (const city of shuffledGlobal) {
+    // 1. Grab up to 3 local decoys
+    const slicedDecoys = countryDecoys.slice(0, 3);
+    slicedDecoys.forEach(city => {
+      wrongAnswers.push({ text: city, kind: "wrong" });
+      used.add(city);
+    });
+
+    // 2. Fallback: If short on decoys, pad with other capitals from this region
+    if (wrongAnswers.length < 3) {
+      const otherCapitals = localShuffle(entities.map(e => e.capital).filter(c => c !== correctCapital));
+      for (const city of otherCapitals) {
         if (wrongAnswers.length < 3 && !used.has(city)) {
           wrongAnswers.push({ text: city, kind: "wrong" });
           used.add(city);
-        }
-      }
-    } else {
-      // ADVANCED: 3 local decoys from the decoy_cities.js file
-      const slicedDecoys = countryDecoys.slice(0, 3);
-      slicedDecoys.forEach(city => {
-        wrongAnswers.push({ text: city, kind: "wrong" });
-        used.add(city);
-      });
-
-      // Safety Fallback: If a country has fewer than 3 decoys in the file, 
-      // pad the remaining slots with other correct capitals from this same region.
-      if (wrongAnswers.length < 3) {
-        const otherCapitals = localShuffle(entities.map(e => e.capital).filter(c => c !== correctCapital));
-        for (const city of otherCapitals) {
-          if (wrongAnswers.length < 3 && !used.has(city)) {
-            wrongAnswers.push({ text: city, kind: "wrong" });
-            used.add(city);
-          }
         }
       }
     }

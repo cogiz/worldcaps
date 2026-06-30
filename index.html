@@ -188,32 +188,44 @@ const regionFrame = document.getElementById("region-frame");
 
 const boxScore = document.getElementById("box-score");
 const boxToggle = document.getElementById("box-toggle");
-const gmText = document.getElementById("grand-master-text"); // Reference to new text
+const gmText = document.getElementById("grand-master-text");
 
-// 1. Create ONE audio object, don't create a new one every click
 const clickAudio = new Audio("assets/audio/generic_click.mp3");
 
 function playClickSound() {
-    clickAudio.currentTime = 0; // Rewind to start
+    clickAudio.currentTime = 0; 
     clickAudio.play().catch(()=>{});
 }
 
 let currentView = "menu";
 let scores = loadScores();
 let grandMasterTriggered = false;
+let isTransitioning = false;
 
 function loadScores() {
     const stored = localStorage.getItem("worldcaps_scores");
-    if (stored) return JSON.parse(stored);
-
+    let parsed = stored ? JSON.parse(stored) : null;
     const init = {};
-    REGIONS.forEach(r => init[r.id] = { best:0, total:r.total });
+    
+    REGIONS.forEach(r => {
+        let genScore = 0;
+        let geniusScore = 0;
+        
+        // Safely migrate old save data to the new General/Genius format
+        if (parsed && parsed[r.id]) {
+            if (parsed[r.id].general !== undefined) {
+                genScore = parsed[r.id].general;
+                geniusScore = parsed[r.id].genius || 0;
+            } else if (parsed[r.id].best !== undefined) {
+                genScore = parsed[r.id].best; 
+            }
+        }
+        init[r.id] = { general: genScore, genius: geniusScore, total: r.total };
+    });
+    
     localStorage.setItem("worldcaps_scores", JSON.stringify(init));
     return init;
 }
-
-// 2. Add a state lock for transitions
-let isTransitioning = false;
 
 function buildMenu() {
     regionGrid.innerHTML = "";
@@ -222,21 +234,25 @@ function buildMenu() {
         const panel = document.createElement("div");
         panel.className = "region-panel";
 
-        if (scores[region.id].best === region.total) {
+        let stars = "";
+        // FEATURE 2: 2 Stars for Genius, 1 Star for General
+        if (scores[region.id].genius === region.total) {
             panel.classList.add("completed");
+            stars = "★★";
+        } else if (scores[region.id].general === region.total) {
+            panel.classList.add("completed");
+            stars = "★";
         }
 
-        panel.innerHTML = `${region.name}<span class="star">★</span>`;
+        panel.innerHTML = `${region.name}<span class="star" style="display:${stars ? 'block' : 'none'};">${stars}</span>`;
 
         panel.onclick = () => {
-            // 3. Block spam clicking
             if (isTransitioning) return; 
             isTransitioning = true;
             
             playClickSound();
             showRegion(region);
 
-            // Unlock after iframe has time to load
             setTimeout(() => { isTransitioning = false; }, 1000);
         };
 
@@ -244,33 +260,43 @@ function buildMenu() {
     });
 }
 
-
 function buildBoxScore() {
     scoreContent.innerHTML = "";
 
     REGIONS.forEach(region => {
-        const best = scores[region.id].best;
+        const genScore = scores[region.id].general;
+        const geniusScore = scores[region.id].genius;
         const total = region.total;
-        const pct = total ? Math.round(best / total * 100) : 0;
+        
+        const genPct = total ? Math.round(genScore / total * 100) : 0;
+        const geniusPct = total ? Math.round(geniusScore / total * 100) : 0;
 
-        const isPerfect = pct === 100;
+        const isGenPerfect = genPct === 100;
+        const isGeniusPerfect = geniusPct === 100;
 
-        const row = document.createElement("div");
-        row.style.display = "flex";
-        row.style.justifyContent = "space-between";
-        row.style.fontFamily = "monospace";
-        row.style.marginBottom = "12px";
-
-        row.innerHTML = `
-            <span style="color:${isPerfect ? '#00ff00' : '#ffffff'};">
-                ${region.name}
-            </span>
-            <span style="color:${isPerfect ? '#00ff00' : '#ffffff'};">
-                ${pct}%
-            </span>
+        // FEATURE 3: General Row
+        const row1 = document.createElement("div");
+        row1.style.display = "flex";
+        row1.style.justifyContent = "space-between";
+        row1.style.fontFamily = "monospace";
+        row1.style.marginBottom = "4px";
+        row1.innerHTML = `
+            <span style="color:${isGenPerfect ? '#00ff00' : '#ffffff'};">${region.name.toUpperCase()} (GENERAL)</span>
+            <span style="color:${isGenPerfect ? '#00ff00' : '#ffffff'};">${genPct}%</span>
         `;
+        scoreContent.appendChild(row1);
 
-        scoreContent.appendChild(row);
+        // FEATURE 3: Genius Row
+        const row2 = document.createElement("div");
+        row2.style.display = "flex";
+        row2.style.justifyContent = "space-between";
+        row2.style.fontFamily = "monospace";
+        row2.style.marginBottom = "12px";
+        row2.innerHTML = `
+            <span style="color:${isGeniusPerfect ? '#00ff00' : '#999999'};">${region.name.toUpperCase()} (GENIUS)</span>
+            <span style="color:${isGeniusPerfect ? '#00ff00' : '#999999'};">${geniusPct}%</span>
+        `;
+        scoreContent.appendChild(row2);
     });
 }
 
@@ -285,14 +311,14 @@ function showRegion(region) {
     currentView = "region";
     menuScreen.style.display = "none";
     regionScreen.style.display = "block";
-    regionFrame.src = region.path;
+    
+    // FEATURE 1: Pass the General completion status to the iframe via URL
+    const isGeneralPerfect = scores[region.id].general === region.total;
+    regionFrame.src = `${region.path}?generalPerfect=${isGeneralPerfect}`;
 }
 
-// NEW: Function to toggle the Grand Master text display
 function updateGrandMasterDisplay() {
-    const allPerfect = REGIONS.every(r => scores[r.id].best === r.total);
-    
-    // Only show if they are perfect AND they have already seen the celebration screen
+    const allPerfect = REGIONS.every(r => scores[r.id].genius === r.total);
     if (allPerfect && sessionStorage.getItem("grandMasterTriggered") === "1") {
         gmText.style.display = "block";
     } else {
@@ -301,9 +327,8 @@ function updateGrandMasterDisplay() {
 }
 
 function checkGrandMaster() {
-    const allPerfect = REGIONS.every(r =>
-        scores[r.id].best === r.total
-    );
+    // Grand Master now requires GENIUS to be 100% on all regions
+    const allPerfect = REGIONS.every(r => scores[r.id].genius === r.total);
 
     if (!allPerfect) return;
     if (grandMasterTriggered) return;
@@ -318,15 +343,15 @@ function checkGrandMaster() {
 }
 
 window.addEventListener("message", (event) => {
-
     if (event.origin !== window.location.origin) return;
     if (!event.data || event.data.type !== "REGION_COMPLETE") return;
 
-    const { regionId, score, total } = event.data;
+    const { regionId, score, total, difficulty } = event.data;
 
     if (!scores[regionId]) return;
 
-    scores[regionId].best = Math.max(scores[regionId].best, score);
+    const diffKey = difficulty || "general"; 
+    scores[regionId][diffKey] = Math.max(scores[regionId][diffKey], score);
     scores[regionId].total = total;
 
     localStorage.setItem("worldcaps_scores", JSON.stringify(scores));
@@ -334,34 +359,21 @@ window.addEventListener("message", (event) => {
     buildMenu();
     buildBoxScore();
 
-    // SHOW MENU FIRST, THEN CHECK
     setTimeout(() => {
         showMenu();
-
-        // IMPORTANT FIX: run AFTER view switch
         checkGrandMaster();
-
     }, 3000);
 });
 
 boxScore.onclick = () => {
     playClickSound();
     boxScore.classList.toggle("collapsed");
-    boxToggle.textContent =
-        boxScore.classList.contains("collapsed") ? "▸" : "▾";
+    boxToggle.textContent = boxScore.classList.contains("collapsed") ? "▸" : "▾";
 };
 
-boxScore.onclick = () => {
-    playClickSound();
-    boxScore.classList.toggle("collapsed");
-    boxToggle.textContent =
-        boxScore.classList.contains("collapsed") ? "▸" : "▾";
-};
-
-// --- REPLACED HARDENED RESET BUTTON ---
 document.getElementById("reset-scores").onclick = (e) => {
     if (e.target.disabled) return;
-    e.target.disabled = true; // Lock button
+    e.target.disabled = true; 
 
     playClickSound();
     localStorage.removeItem("worldcaps_scores");
@@ -372,14 +384,12 @@ document.getElementById("reset-scores").onclick = (e) => {
     buildBoxScore();
     updateGrandMasterDisplay();
 
-    // Unlock button after 1 second
     setTimeout(() => { e.target.disabled = false; }, 1000);
 };
 
-// Initial Load
 buildMenu();
 buildBoxScore();
-updateGrandMasterDisplay(); // NEW: Check if we should show the text on page load
+updateGrandMasterDisplay();
 
 </script>
 

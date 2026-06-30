@@ -116,16 +116,13 @@ export class QuizEngine {
   }
 
   // Dynamic UI builder for the difficulty buttons
-  renderDifficultyUI() {
+ renderDifficultyUI() {
     if (!this.qaPanel || !this.questionBox) return;
-
-    // Remove old panel if it somehow exists
     if (this.diffContainer) this.diffContainer.remove();
 
     this.diffContainer = document.createElement("div");
     this.diffContainer.id = "difficultyPanel";
     
-    // Minimal layout styles using theme matching colors
     Object.assign(this.diffContainer.style, {
       display: "flex",
       gap: "10px",
@@ -134,36 +131,36 @@ export class QuizEngine {
       width: "100%"
     });
 
-    // Ensure a default starting level exists
-    this.config.difficulty = this.config.difficulty || "advanced";
+    this.config.difficulty = this.config.difficulty || "general";
+    const levels = ["general", "genius"]; 
 
-    const levels = ["beginner", "advanced"];
-    if (this.config.hasGeniusMode) {
-      levels.push("genius");
-    }
+    // FEATURE 1: Check if General is 100% via the URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const isGeneralPerfect = urlParams.get('generalPerfect') === 'true';
 
     levels.forEach(level => {
       const btn = document.createElement("button");
-      btn.textContent = level.toUpperCase();
       
-      // Standby style: black background with neon green borders/text
+      // Check if this specific button should be locked
+      const isLocked = level === "genius" && !isGeneralPerfect;
+      btn.textContent = isLocked ? "GENIUS 🔒" : level.toUpperCase();
+      
       const setNormalStyle = () => {
         Object.assign(btn.style, {
           padding: "6px 14px",
-          backgroundColor: "#000000",
-          color: "#00FF00",
-          border: "2px solid #00FF00",
+          backgroundColor: isLocked ? "#111" : "#000000",
+          color: isLocked ? "#555" : "#00FF00",
+          border: isLocked ? "2px solid #333" : "2px solid #00FF00",
           fontFamily: "inherit",
           fontWeight: "bold",
           fontSize: "0.85rem",
-          cursor: this.difficultyLocked ? "not-allowed" : "pointer",
+          cursor: (this.difficultyLocked || isLocked) ? "not-allowed" : "pointer",
           borderRadius: "0px", 
           transition: "all 0.1s ease-in-out",
-          opacity: this.difficultyLocked && this.config.difficulty !== level ? "0.5" : "1"
+          opacity: (this.difficultyLocked && this.config.difficulty !== level) ? "0.5" : "1"
         });
       };
 
-      // Active state style: fully inverted green fill with dark text
       const setActiveStyle = () => {
         Object.assign(btn.style, {
           padding: "6px 14px",
@@ -173,7 +170,7 @@ export class QuizEngine {
           fontFamily: "inherit",
           fontWeight: "900",
           fontSize: "0.85rem",
-          cursor: this.difficultyLocked ? "not-allowed" : "pointer",
+          cursor: "not-allowed",
           borderRadius: "0px",
           opacity: "1"
         });
@@ -185,27 +182,33 @@ export class QuizEngine {
         setNormalStyle();
       }
 
-      // Quick hover animations (only apply if the difficulty isn't locked yet)
       btn.onmouseenter = () => {
-        if (!this.difficultyLocked) {
-          btn.style.backgroundColor = "#222222";
-        }
+        if (!this.difficultyLocked && !isLocked) btn.style.backgroundColor = "#222222";
       };
       btn.onmouseleave = () => {
-        if (!this.difficultyLocked) {
-          btn.style.backgroundColor = "#000000";
-        }
+        if (!this.difficultyLocked && !isLocked) btn.style.backgroundColor = "#000000";
       };
 
       btn.onclick = () => {
-        // Reject clicks completely if difficulty is locked for this region session
+        // If they click the locked button, show an error message!
+        if (isLocked) {
+            this.showError("Get 100% on GENERAL to unlock GENIUS!");
+            setTimeout(() => {
+                if (this.questionBox) {
+                    this.questionBox.textContent = "CHOOSE A DIFFICULTY LEVEL TO START";
+                    this.questionBox.style.color = "";
+                    this.questionBox.style.backgroundColor = "";
+                }
+            }, 2000);
+            return;
+        }
+
         if (this.difficultyLocked || this.actionDebounce) return;
         
         this.safePlay(this.audioClick);
         this.config.difficulty = level;
-        this.difficultyLocked = true; // Lock choice instantly
+        this.difficultyLocked = true; 
 
-        // Clean and update active button visual status across the bar
         Array.from(this.diffContainer.children).forEach((childNode, index) => {
           if (levels[index] === level) {
             childNode.style.backgroundColor = "#00FF00";
@@ -221,14 +224,12 @@ export class QuizEngine {
           }
         });
 
-        // Fire engine and pull the questions down
         this.loadQuestion();
       };
 
       this.diffContainer.appendChild(btn);
     });
 
-    // Injects the selection row neatly right before the main question display box
     this.qaPanel.insertBefore(this.diffContainer, this.questionBox);
   }
 
@@ -255,7 +256,7 @@ export class QuizEngine {
       this.moveCapitalStar(this.currentEntity.x, this.currentEntity.y);
 
       // Ensure a default difficulty exists
-      this.config.difficulty = this.config.difficulty || "advanced";
+      this.config.difficulty = this.config.difficulty || "general";
 
       // 2. Further down in loadQuestion(), update the Hint locking logic:
       if (this.hintBtn) {
@@ -374,7 +375,7 @@ export class QuizEngine {
     this.actionDebounce = true;
     this.hintUsed = true;
     
-    // Disable the hint button without changing colors
+    // Disable the hint button
     if (this.hintBtn) {
       this.hintBtn.disabled = true;
       this.hintBtn.style.cursor = "not-allowed";
@@ -383,16 +384,58 @@ export class QuizEngine {
     
     this.safePlay(this.audioClick);
 
-    const hasPreferredWrong = this.answerBtns.some(b => b.dataset.kind === "preferredWrong");
-    const wrongBtns = this.answerBtns.filter(b => b.dataset.kind === "wrong");
+    // 1. Find all the wrong buttons currently on the screen
+    const wrongBtns = this.answerBtns.filter(b => b.dataset.kind === "wrong" || b.dataset.kind === "preferredWrong");
 
-    if (hasPreferredWrong) {
-      wrongBtns.forEach(btn => btn.classList.add("hint-disabled"));
-    } else {
-      this.shuffle(wrongBtns).slice(0, 2).forEach(btn => {
-        btn.classList.add("hint-disabled");
-      });
-    }
+    // 2. Pick 2 of them at random to replace
+    const btnsToReplace = this.shuffle(wrongBtns).slice(0, 2);
+
+    // 3. Get the text of all 4 current buttons so we don't accidentally pull a duplicate global capital
+    const currentTexts = this.answerBtns.map(b => b.textContent);
+
+    // 4. Filter the global capitals list to remove anything already on the screen
+    const availableGlobals = this.config.globalCapitals.filter(c => !currentTexts.includes(c));
+    
+    // 5. Pick 2 random global capitals
+    const replacementTexts = this.shuffle(availableGlobals).slice(0, 2);
+
+    // 6. Swap the text on the buttons with a 3D Airport Flip Animation!
+    btnsToReplace.forEach((btn, index) => {
+      if (replacementTexts[index]) {
+        
+        // Phase 1: Flip the button backward 90 degrees (folding it away)
+        const flipOut = btn.animate([
+          { transform: 'perspective(400px) rotateX(0deg)' },
+          { transform: 'perspective(400px) rotateX(90deg)' }
+        ], { duration: 150, easing: 'ease-in' });
+
+        flipOut.onfinish = () => {
+          // Phase 2: While the button is edge-on (invisible), swap the text and color!
+          btn.textContent = replacementTexts[index];
+          btn.dataset.value = replacementTexts[index];
+          btn.style.backgroundColor = "#C8A2C8"; // Lilac
+          btn.style.color = "#000"; // Black text
+          
+          // Phase 3: Flip the button down the rest of the way to reveal the new text
+          const flipIn = btn.animate([
+            { transform: 'perspective(400px) rotateX(-90deg)' },
+            { transform: 'perspective(400px) rotateX(0deg)' }
+          ], { duration: 150, easing: 'ease-out' });
+
+          flipIn.onfinish = () => {
+            // Phase 4: Hold the lilac color for 1 second, then smoothly fade back
+            setTimeout(() => {
+              btn.style.transition = "background-color 0.3s, color 0.3s";
+              btn.style.backgroundColor = "";
+              btn.style.color = "";
+              
+              // Clean up the transition so hover effects work normally again
+              setTimeout(() => btn.style.transition = "", 300); 
+            }, 1000);
+          };
+        };
+      }
+    });
 
     setTimeout(() => {
       this.actionDebounce = false;
@@ -450,7 +493,8 @@ export class QuizEngine {
         score: this.score,
         total: this.totalQuestions,
         percentage: percentage,
-        perfect: isPerfect
+        perfect: isPerfect,
+        difficulty: this.config.difficulty // <--- ADD THIS LINE
       }, "*");
     } catch (err) {
       console.warn("postMessage failed:", err);
@@ -497,7 +541,8 @@ export class QuizEngine {
         score: this.score, // Saves however many they got right before dying
         total: this.totalQuestions,
         percentage: Math.round((this.score / this.totalQuestions) * 100),
-        perfect: false
+        perfect: false,
+        difficulty: this.config.difficulty // <--- ADD THIS LINE
       }, "*");
     } catch (err) {
       console.warn("postMessage failed:", err);
